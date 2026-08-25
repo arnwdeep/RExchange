@@ -827,15 +827,15 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
         </section>
 
-        {/* 3. FOOTER */}
-        <footer className="mt-8 pt-6 border-t border-black/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono-code text-black font-extrabold max-w-7xl mx-auto px-4">
+        {/* 3. FOOTER IN ELEGANT THIN WHITE HELVETICA FONT */}
+        <footer className="mt-8 pt-6 border-t border-white/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-helvetica-thin text-white tracking-widest max-w-7xl mx-auto px-4">
           <div>
-            <span className="font-extrabold text-black text-base tracking-wider uppercase font-helvetica">REXCHANGE®</span>
-            <p className="text-[10px] text-black/80 mt-0.5 uppercase">EXCHANGE • SHARE • GROW • Student Community Platform</p>
+            <span className="font-helvetica-thin font-light text-white text-base sm:text-lg tracking-[0.2em] uppercase">REXCHANGE®</span>
+            <p className="text-[10px] font-helvetica-thin text-white/80 mt-0.5 uppercase tracking-[0.2em]">EXCHANGE • SHARE • GROW • STUDENT COMMUNITY PLATFORM</p>
           </div>
 
           <div>
-            <span>© 2026 RExchange Platform</span>
+            <span className="font-helvetica-thin text-white/80 tracking-widest">© 2026 RExchange Platform</span>
           </div>
         </footer>
 
