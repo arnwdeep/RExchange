@@ -507,7 +507,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
           transform: `translate3d(${dragOffset.x}px, 0px, 0px)`,
           transition: isDraggingCard ? 'none' : 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)'
         }}
-        className="fixed top-0 left-4 sm:left-10 z-50 flex flex-col items-center pointer-events-auto cursor-ew-resize active:cursor-grabbing select-none animate-card-shift-top-left-screen"
+        className="fixed top-0 left-36 sm:left-44 md:left-48 z-50 flex flex-col items-center pointer-events-auto cursor-ew-resize active:cursor-grabbing select-none animate-card-shift-top-left-screen"
         title="Hold and slide across top part from left to right • Tap to flip"
       >
         <HangingLanyard isTyping={false} tilt={{ x: 0, y: cardTilt.y - dragOffset.x * 0.05 }} />
@@ -534,9 +534,9 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
         </div>
 
         {/* OVERLAID TOP NAVIGATION BAR */}
-        <header className="w-full flex items-center justify-between pb-4 border-b border-black/20 pl-24 sm:pl-32 lg:pl-40 relative z-20">
+        <header className="w-full flex items-center justify-between pb-4 border-b border-black/20 relative z-20">
           
-          {/* TOP LEFT: BRAND NAME IN SMALL HELVETICA BOLD (WITHOUT LOGO) */}
+          {/* TOP LEFT: BRAND NAME IN SMALL HELVETICA BOLD (FAR LEFT) */}
           <div className="flex items-center">
             <span className="font-helvetica font-black text-sm sm:text-base text-white tracking-wider uppercase cursor-pointer" onClick={() => { setSelectedCategory('All'); setShowWishlistOnly(false); }}>
               REXCHANGE®
