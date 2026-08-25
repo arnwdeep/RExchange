@@ -258,6 +258,10 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
   const [selectedTradeItem, setSelectedTradeItem] = useState('Direct Cash Exchange');
   const [proposalNote, setProposalNote] = useState('');
 
+  // My Exchanges Dedicated Page State
+  const [showExchangesPage, setShowExchangesPage] = useState(false);
+  const [exchangesTab, setExchangesTab] = useState('All');
+
   // Toast Notification State
   const [toastMessage, setToastMessage] = useState(null);
 
@@ -557,13 +561,14 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
             <nav className="flex items-center gap-3 sm:gap-5 text-xs font-mono-code font-extrabold tracking-widest text-white uppercase">
               <button
                 onClick={() => {
+                  setShowExchangesPage(false);
                   setSelectedCategory('All');
                   setShowWishlistOnly(false);
                   setSearchQuery('');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className={`px-3.5 py-1.5 rounded-full transition-all shadow cursor-pointer ${
-                  selectedCategory === 'All' && !showWishlistOnly ? 'text-black bg-white/60 font-black' : 'hover:text-black hover:bg-white/30'
+                  !showExchangesPage && selectedCategory === 'All' && !showWishlistOnly ? 'text-black bg-white/60 font-black' : 'hover:text-black hover:bg-white/30'
                 }`}
               >
                 Home
@@ -571,12 +576,13 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
               <button
                 onClick={() => {
+                  setShowExchangesPage(false);
                   setSelectedCategory('All');
                   setShowWishlistOnly(false);
                   document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
                 }}
                 className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
-                  selectedCategory === 'All' && !showWishlistOnly ? 'hover:text-black font-bold' : 'hover:text-black hover:bg-white/30'
+                  !showExchangesPage && selectedCategory === 'All' && !showWishlistOnly ? 'hover:text-black font-bold' : 'hover:text-black hover:bg-white/30'
                 }`}
               >
                 Catalog
@@ -584,13 +590,11 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
               <button
                 onClick={() => {
-                  setSelectedCategory('Exchanges');
-                  setShowWishlistOnly(false);
-                  document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
-                  showToast('Filtering for Campus Exchange listings');
+                  setShowExchangesPage(true);
+                  showToast('Opening My Campus Exchanges & Activity');
                 }}
                 className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer ${
-                  selectedCategory === 'Exchanges' ? 'text-black bg-white/60 font-black shadow' : 'hover:text-black hover:bg-white/30'
+                  showExchangesPage ? 'text-black bg-white/60 font-black shadow' : 'hover:text-black hover:bg-white/30'
                 }`}
               >
                 Exchanges
@@ -836,6 +840,215 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
         </footer>
 
       </div>
+
+      {/* DEDICATED MY CAMPUS EXCHANGES & ACTIVITY PAGE */}
+      {showExchangesPage && (
+        <div className="fixed inset-0 z-50 bg-[#FF4F00] text-black w-screen h-screen min-h-screen overflow-y-auto p-4 sm:p-8 md:p-10 animate-enter-cinematic flex flex-col justify-between select-none">
+          
+          {/* HEADER BAR */}
+          <header className="w-full flex items-center justify-between pb-4 border-b border-black max-w-7xl mx-auto">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowExchangesPage(false)}
+                className="px-4 py-2 rounded-full bg-black text-white hover:bg-white hover:text-black transition-all text-xs font-mono-code font-black uppercase border border-black flex items-center gap-2 cursor-pointer shadow-md"
+              >
+                <ArrowRight className="w-4 h-4 transform rotate-180" />
+                <span>Back to Home</span>
+              </button>
+              <span className="font-helvetica font-black text-lg sm:text-xl text-black tracking-wider uppercase">
+                REXCHANGE® • MY EXCHANGES & ACTIVITY
+              </span>
+            </div>
+
+            <button
+              onClick={() => setShowExchangesPage(false)}
+              className="p-2.5 rounded-full bg-black text-white hover:bg-white hover:text-black transition-all cursor-pointer border border-black shadow-md"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </header>
+
+          {/* MAIN CONTENT CONTAINER */}
+          <main className="max-w-7xl mx-auto w-full my-6 space-y-8 flex-1">
+            
+            {/* STATS METRICS GRID */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="border-2 border-black bg-white/30 p-4 space-y-1">
+                <span className="text-[10px] font-mono-code font-black uppercase text-black/80 block">Listed Items</span>
+                <span className="text-2xl sm:text-3xl font-black font-mono-code text-black">
+                  {catalogItems.filter(i => i.seller?.name === 'Arjun Sharma' || i.isCustom).length + 2}
+                </span>
+                <span className="text-[9px] font-mono-code text-black/70 block">Active Campus Listings</span>
+              </div>
+
+              <div className="border-2 border-black bg-white/30 p-4 space-y-1">
+                <span className="text-[10px] font-mono-code font-black uppercase text-black/80 block">Completed Exchanges</span>
+                <span className="text-2xl sm:text-3xl font-black font-mono-code text-black">14</span>
+                <span className="text-[9px] font-mono-code text-black/70 block">Traded with Campus Peers</span>
+              </div>
+
+              <div className="border-2 border-black bg-white/30 p-4 space-y-1">
+                <span className="text-[10px] font-mono-code font-black uppercase text-black/80 block">Items Sold</span>
+                <span className="text-2xl sm:text-3xl font-black font-mono-code text-black">5</span>
+                <span className="text-[9px] font-mono-code text-black/70 block">Direct Peer Sales</span>
+              </div>
+
+              <div className="border-2 border-black bg-white/30 p-4 space-y-1">
+                <span className="text-[10px] font-mono-code font-black uppercase text-black/80 block">Total Portfolio Value</span>
+                <span className="text-2xl sm:text-3xl font-black font-mono-code text-black">₹12,450</span>
+                <span className="text-[9px] font-mono-code text-black/70 block">Verified Exchange Value</span>
+              </div>
+            </div>
+
+            {/* TAB FILTER BAR & SELL BUTTON */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black pb-4">
+              <div className="flex items-center gap-2 text-xs font-mono-code font-black uppercase">
+                {['All', 'Listed', 'Purchased', 'Sold'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setExchangesTab(tab)}
+                    className={`px-4 py-2 border border-black cursor-pointer transition-all ${
+                      exchangesTab === tab ? 'bg-black text-white font-extrabold' : 'bg-white/40 text-black hover:bg-black hover:text-white'
+                    }`}
+                  >
+                    {tab === 'All' ? 'All Activity' : tab === 'Listed' ? 'My Listed Items' : tab === 'Purchased' ? 'Purchased & Exchanged' : 'Sold Items'}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  setShowExchangesPage(false);
+                  setIsSellModalOpen(true);
+                }}
+                className="px-5 py-2 border-2 border-black bg-black text-white hover:bg-white hover:text-black font-mono-code font-black text-xs uppercase cursor-pointer flex items-center gap-2 shadow-md transition-all"
+              >
+                <Plus className="w-4 h-4" />
+                <span>+ List New Item</span>
+              </button>
+            </div>
+
+            {/* MY EXCHANGES ACTIVITY LIST GRID */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                {
+                  id: 'ex-1',
+                  title: 'Engineering Mathematics Vol. II',
+                  category: 'Books',
+                  image: '/items/math_textbook.jpg',
+                  status: 'LISTED',
+                  type: 'Listed by You',
+                  value: '₹450',
+                  date: 'Today, 2:15 PM',
+                  partner: 'Listed on Campus',
+                  notes: 'Active listing visible in 3D Catalog'
+                },
+                {
+                  id: 'ex-2',
+                  title: 'Sony WH-1000XM4 ANC Headphones',
+                  category: 'Electronics',
+                  image: '/items/sony_headphones.jpg',
+                  status: 'EXCHANGED',
+                  type: 'Campus Exchange',
+                  value: '₹1,200',
+                  date: 'Yesterday, 6:40 PM',
+                  partner: 'Exchanged with Ananya Sharma (CS 2nd Year)',
+                  notes: 'Traded for Mechanical Keyboard'
+                },
+                {
+                  id: 'ex-3',
+                  title: 'Casio FX-991EX ClassWiz Calculator',
+                  category: 'Electronics',
+                  image: '/items/casio_calculator.jpg',
+                  status: 'PURCHASED',
+                  type: 'Campus Purchase',
+                  value: '₹650',
+                  date: '24 Aug 2026',
+                  partner: 'Purchased from Priya Kapoor (EE 2nd Year)',
+                  notes: 'Verified exam approved condition'
+                },
+                {
+                  id: 'ex-4',
+                  title: 'Python Programming Handwritten Notes',
+                  category: 'Notes',
+                  image: '/items/python_notes.jpg',
+                  status: 'SOLD',
+                  type: 'Item Sold',
+                  value: '₹350',
+                  date: '22 Aug 2026',
+                  partner: 'Sold to Arjun Sen (IT 4th Year)',
+                  notes: 'UPI payment received'
+                },
+                {
+                  id: 'ex-5',
+                  title: 'Hackathon VIP Pass & Workshop Ticket',
+                  category: 'Tickets',
+                  image: '/items/hackathon_pass.jpg',
+                  status: 'EXCHANGED',
+                  type: 'Ticket Transfer',
+                  value: '₹290',
+                  date: '20 Aug 2026',
+                  partner: 'Transferred to Sarah Lee (Design 3rd Year)',
+                  notes: 'Holographic pass verified'
+                }
+              ]
+              .filter(item => {
+                if (exchangesTab === 'Listed') return item.status === 'LISTED';
+                if (exchangesTab === 'Purchased') return item.status === 'PURCHASED' || item.status === 'EXCHANGED';
+                if (exchangesTab === 'Sold') return item.status === 'SOLD';
+                return true;
+              })
+              .map(item => (
+                <div key={item.id} className="border-2 border-black bg-white/40 p-5 flex flex-col justify-between space-y-4 shadow-lg">
+                  <div className="flex items-start gap-4">
+                    <div className="w-20 h-24 border border-black bg-white p-1 flex-shrink-0">
+                      <img src={item.image} alt={item.title} className="w-full h-full object-contain" />
+                    </div>
+
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`text-[10px] font-mono-code font-black px-2 py-0.5 border border-black uppercase ${
+                          item.status === 'LISTED' ? 'bg-emerald-400 text-black' :
+                          item.status === 'EXCHANGED' ? 'bg-amber-400 text-black' :
+                          item.status === 'SOLD' ? 'bg-blue-400 text-black' : 'bg-purple-400 text-black'
+                        }`}>
+                          {item.status}
+                        </span>
+                        <span className="text-[11px] font-mono-code font-black text-black">{item.value}</span>
+                      </div>
+
+                      <h3 className="text-base font-black font-helvetica uppercase text-black truncate">{item.title}</h3>
+                      <p className="text-xs font-mono-code text-black/90 font-bold">{item.partner}</p>
+                      <p className="text-[10px] font-mono-code text-black/80">{item.notes}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3 border-t border-black text-[11px] font-mono-code font-bold">
+                    <span className="text-black/80">{item.date}</span>
+                    <button
+                      onClick={() => {
+                        const matchedResource = catalogItems.find(r => r.title === item.title) || catalogItems[0];
+                        setSelectedResource(matchedResource);
+                      }}
+                      className="px-3 py-1 border border-black bg-black text-white hover:bg-white hover:text-black transition-all cursor-pointer uppercase"
+                    >
+                      View Details →
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </main>
+
+          {/* EDITORIAL FOOTER */}
+          <footer className="w-full pt-4 border-t border-black flex items-center justify-between text-[11px] font-mono-code font-bold max-w-7xl mx-auto">
+            <span>REXCHANGE® • MY CAMPUS EXCHANGES & ACTIVITY</span>
+            <span>VERIFIED STUDENT PASSPORT</span>
+          </footer>
+
+        </div>
+      )}
 
       {/* FULL SCREEN RESOURCE & SELLER DETAILS OVERLAY (EDITORIAL MINIMAL LAYOUT MATCHING REFERENCE) */}
       {selectedResource && (
