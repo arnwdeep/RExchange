@@ -809,12 +809,12 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
           </div>
 
-          {/* DYNAMIC REAL-TIME MINIMALIST ITEM TITLE IN VERY SMALL HELVETICA THIN FONT */}
+          {/* DYNAMIC REAL-TIME ITEM TITLE IN BIG BOLD HELVETICA FONT */}
           {currentFocusedItem && (
-            <div className="w-full text-center my-6 transition-all duration-300 select-none">
+            <div className="w-full text-center my-6 transition-all duration-300 select-none px-4">
               <span
                 onClick={() => setSelectedResource(currentFocusedItem)}
-                className="font-helvetica-thin text-[11px] sm:text-xs text-white/90 uppercase tracking-[0.25em] cursor-pointer hover:text-black transition-colors px-4 py-1 border-b border-transparent hover:border-black inline-block"
+                className="font-helvetica font-black text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider cursor-pointer hover:text-black transition-colors inline-block drop-shadow-md"
               >
                 {currentFocusedItem.title}
               </span>
