@@ -837,209 +837,155 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
       </div>
 
-      {/* FULL SCREEN RESOURCE & SELLER DETAILS OVERLAY */}
+      {/* FULL SCREEN RESOURCE & SELLER DETAILS OVERLAY (EDITORIAL MINIMAL LAYOUT MATCHING REFERENCE) */}
       {selectedResource && (
-        <div className="fixed inset-0 z-50 bg-[#FF4F00] text-black w-screen h-screen min-h-screen overflow-y-auto p-4 sm:p-8 md:p-12 animate-enter-cinematic flex flex-col justify-between select-none">
+        <div className="fixed inset-0 z-50 bg-[#FF4F00] text-black w-screen h-screen min-h-screen overflow-y-auto p-4 sm:p-8 md:p-10 animate-enter-cinematic flex flex-col justify-between select-none">
           
-          {/* TOP FULL-SCREEN HEADER BAR */}
-          <header className="w-full flex items-center justify-between pb-6 border-b-2 border-black max-w-7xl mx-auto">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setSelectedResource(null)}
-                className="px-4 py-2 rounded-full bg-black text-white hover:bg-white hover:text-black transition-all text-xs font-mono-code font-extrabold uppercase border border-black flex items-center gap-2 cursor-pointer shadow-md"
-              >
-                <ArrowRight className="w-4 h-4 transform rotate-180" />
-                <span>Back to Catalog</span>
-              </button>
-              <span className="font-helvetica font-black text-base sm:text-lg text-black tracking-wider uppercase hidden sm:inline">
-                REXCHANGE® • ITEM DETAILS
-              </span>
+          {/* TOP BREADCRUMBS & CLOSE HEADER */}
+          <header className="w-full flex items-center justify-between pb-4 border-b border-black max-w-7xl mx-auto">
+            <div className="flex items-center gap-2 text-xs font-mono-code font-bold uppercase tracking-wider text-black/90">
+              <span className="cursor-pointer hover:underline" onClick={() => setSelectedResource(null)}>Shop</span>
+              <span>•</span>
+              <span className="cursor-pointer hover:underline">{selectedResource.category}</span>
+              <span>•</span>
+              <span className="font-extrabold text-black truncate max-w-[200px] sm:max-w-md">{selectedResource.title}</span>
             </div>
 
             {/* Close Button */}
             <button
               onClick={() => setSelectedResource(null)}
-              className="p-3 rounded-full bg-black hover:bg-white text-white hover:text-black transition-all cursor-pointer shadow-lg border-2 border-black"
-              title="Close Full Screen View"
+              className="p-2.5 rounded-full bg-black text-white hover:bg-white hover:text-black transition-all cursor-pointer border border-black shadow-md"
+              title="Close View"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </header>
 
-          {/* MAIN FULL-SCREEN SHOWCASE CONTAINER */}
-          <main className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 items-center my-6 flex-1">
+          {/* MAIN EDITORIAL GRID SHOWCASE CONTAINER */}
+          <main className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start my-6 flex-1">
             
-            {/* Left Column: Product Image (Span 5) */}
-            <div className="md:col-span-5 relative rounded-3xl overflow-hidden border-3 border-black h-[320px] sm:h-[420px] md:h-[480px] shadow-2xl group bg-white">
-              <img
-                src={selectedResource.image}
-                alt={selectedResource.title}
-                className="w-full h-full object-contain p-6 bg-white group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute top-4 left-4 bg-black text-white text-xs font-extrabold uppercase px-4 py-1.5 rounded-full font-mono-code border border-white/20 shadow-md">
-                {selectedResource.type}
+            {/* Left Column: Product Image & Side Preview (Span 6) */}
+            <div className="md:col-span-6 flex items-start gap-4 sm:gap-6">
+              {/* Vertical Side Thumbnail Preview */}
+              <div className="flex flex-col gap-3 flex-shrink-0">
+                <div className="w-14 h-16 border-2 border-black bg-white p-1 cursor-pointer shadow-sm">
+                  <img src={selectedResource.image} alt={selectedResource.title} className="w-full h-full object-contain" />
+                </div>
+              </div>
+
+              {/* Main Product Showcase Cutout */}
+              <div className="flex-1 flex items-center justify-center min-h-[360px] sm:min-h-[440px] p-6 bg-transparent relative">
+                <img
+                  src={selectedResource.image}
+                  alt={selectedResource.title}
+                  className="max-h-[420px] w-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-2 left-2 bg-black text-white text-[10px] font-extrabold uppercase px-3 py-1 font-mono-code border border-black">
+                  {selectedResource.type}
+                </div>
               </div>
             </div>
 
-            {/* Right Column: Specifications & Seller Info (Span 7) */}
-            <div className="md:col-span-7 space-y-5">
+            {/* Right Column: Framed Editorial Details Box (Span 6) */}
+            <div className="md:col-span-6 bg-[#FF4F00] border-2 border-black p-6 sm:p-8 space-y-6 shadow-xl">
               
-              <div className="flex items-center gap-3 text-xs font-mono-code">
-                <span className="bg-black text-white px-3.5 py-1 rounded-full font-bold uppercase border border-black">
-                  {selectedResource.category}
-                </span>
-                <span className="text-black font-black flex items-center gap-1 font-mono-code text-sm">
-                  <MapPin className="w-4 h-4 text-black" /> {selectedResource.campus}
-                </span>
-              </div>
-
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-black uppercase font-helvetica leading-none tracking-tight">
-                {selectedResource.title}
-              </h1>
-
-              {/* Price & Condition Badge */}
-              <div className="flex items-center gap-6 bg-white/40 p-4 sm:p-5 rounded-2xl border-2 border-black/30 shadow-md">
-                <div>
-                  <span className="text-xs font-mono-code text-black/80 uppercase font-black block">Exchange Value</span>
-                  <span className="text-3xl sm:text-4xl font-black text-black font-mono-code">{selectedResource.value}</span>
-                </div>
-                <div className="h-12 w-0.5 bg-black/30" />
-                <div>
-                  <span className="text-xs font-mono-code text-black/80 uppercase font-black block">Condition</span>
-                  <span className="text-sm sm:text-base font-black text-black uppercase font-mono-code">{selectedResource.condition}</span>
-                </div>
-              </div>
-
-              <p className="text-sm sm:text-base text-black/95 leading-relaxed font-semibold">
-                {selectedResource.description}
-              </p>
-
-              {/* Key Specs Pills */}
-              {selectedResource.specs && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {selectedResource.specs.map((spec, i) => (
-                    <span key={i} className="text-xs font-mono-code bg-black text-white px-3.5 py-1.5 rounded-xl border border-black font-extrabold">
-                      • {spec}
+              {/* Header Title & Price Box */}
+              <div className="flex items-start justify-between gap-4 border-b border-black pb-5">
+                <div className="space-y-1">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-black uppercase font-helvetica leading-tight tracking-tight">
+                    {selectedResource.title}
+                  </h1>
+                  <div className="flex items-center gap-2 text-xs font-mono-code font-bold">
+                    <span className="flex items-center gap-1 text-black">
+                      <Star className="w-3.5 h-3.5 fill-black text-black" /> {selectedResource.rating} rating
                     </span>
-                  ))}
+                    <span>•</span>
+                    <span className="text-black/90 uppercase">{selectedResource.seller.exchanges} Campus Exchanges</span>
+                  </div>
+                </div>
+
+                <div className="text-right flex-shrink-0">
+                  <span className="text-3xl sm:text-4xl font-black text-black font-mono-code block">{selectedResource.value}</span>
+                  <span className="text-[10px] font-mono-code text-black/80 uppercase font-bold block">{selectedResource.condition}</span>
+                </div>
+              </div>
+
+              {/* DESCRIPTION SECTION */}
+              <div className="space-y-2 border-b border-black pb-5">
+                <h4 className="text-xs font-mono-code font-black text-black uppercase tracking-widest">DESCRIPTION</h4>
+                <p className="text-xs sm:text-sm text-black/95 leading-relaxed font-semibold">
+                  {selectedResource.description}
+                </p>
+              </div>
+
+              {/* FOR / SPECIFICATIONS SECTION */}
+              {selectedResource.specs && (
+                <div className="space-y-2 border-b border-black pb-5">
+                  <h4 className="text-xs font-mono-code font-black text-black uppercase tracking-widest">FOR / SPECIFICATIONS</h4>
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {selectedResource.specs.map((spec, i) => (
+                      <span key={i} className="text-xs font-mono-code border border-black px-3 py-1 bg-white/20 text-black font-bold uppercase">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {/* DEDICATED SELLER INFORMATION PROFILE CARD */}
-              <div className="bg-black text-white rounded-2xl p-5 space-y-4 relative overflow-hidden border-2 border-black shadow-2xl mt-4">
-                
-                <div className="flex items-center justify-between border-b border-white/20 pb-3">
-                  <span className="text-xs sm:text-sm font-mono-code font-extrabold text-[#FF4F00] uppercase tracking-widest flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-[#FF4F00]" /> VERIFIED SELLER DETAILS
-                  </span>
-                  <span className="text-[10px] sm:text-xs font-mono-code text-emerald-400 font-extrabold flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-500/40 px-3 py-0.5 rounded-full">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Active on Campus
-                  </span>
-                </div>
+              {/* VERIFIED SELLER DETAILS SECTION */}
+              <div className="space-y-3 border-b border-black pb-5">
+                <h4 className="text-xs font-mono-code font-black text-black uppercase tracking-widest flex items-center justify-between">
+                  <span>VERIFIED CAMPUS SELLER</span>
+                  <span className="text-[10px] text-emerald-950 font-bold bg-emerald-400 px-2 py-0.5 border border-black">Active</span>
+                </h4>
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  
-                  {/* Seller Avatar & Bio */}
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#FF4F00] shadow-lg flex-shrink-0">
-                      <img src={selectedResource.seller.avatar} alt={selectedResource.seller.name} className="w-full h-full object-cover" />
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-lg font-black text-white font-helvetica uppercase">{selectedResource.seller.name}</h4>
-                        <CheckCircle className="w-4 h-4 text-[#FF4F00] fill-[#FF4F00]/20" />
-                      </div>
-
-                      <p className="text-xs text-zinc-300 font-medium">
-                        {selectedResource.seller.dept} • {selectedResource.seller.year}
-                      </p>
-
-                      <p className="text-[10px] font-mono-code text-zinc-400 flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-[#FF4F00]" /> {selectedResource.seller.college}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Seller Ratings & Activity Stats */}
-                  <div className="flex items-center gap-3 bg-zinc-900 border border-zinc-800 px-4 py-2.5 rounded-xl">
-                    <div className="text-center pr-3 border-r border-zinc-800">
-                      <span className="text-lg font-black text-amber-400 font-mono-code flex items-center gap-1">
-                        {selectedResource.seller.rating} <Star className="w-3.5 h-3.5 fill-amber-400" />
-                      </span>
-                      <span className="text-[9px] font-mono-code text-zinc-500 uppercase block">Rating</span>
-                    </div>
-
-                    <div className="text-center">
-                      <span className="text-lg font-black text-white font-mono-code">
-                        {selectedResource.seller.exchanges}
-                      </span>
-                      <span className="text-[9px] font-mono-code text-zinc-500 uppercase block">Exchanges</span>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Response Time & Preferred Exchange Terms */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-mono-code border-t border-zinc-900">
-                  <div className="flex items-center gap-2 text-zinc-200 bg-zinc-900 p-2.5 rounded-xl border border-zinc-800">
-                    <Clock className="w-4 h-4 text-[#FF4F00]" />
-                    <div>
-                      <span className="text-[9px] text-zinc-400 uppercase block">Response Time</span>
-                      <span className="font-bold text-white">{selectedResource.seller.responseTime}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-zinc-200 bg-zinc-900 p-2.5 rounded-xl border border-zinc-800">
-                    <Tag className="w-4 h-4 text-amber-400" />
-                    <div>
-                      <span className="text-[9px] text-zinc-400 uppercase block">Looking For Trade</span>
-                      <span className="font-bold text-amber-300">{selectedResource.seller.preferredTrade}</span>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <img src={selectedResource.seller.avatar} alt={selectedResource.seller.name} className="w-10 h-10 border border-black object-cover flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <h5 className="text-sm font-black font-helvetica uppercase text-black truncate">{selectedResource.seller.name}</h5>
+                    <p className="text-[11px] font-mono-code text-black/90 truncate">{selectedResource.seller.dept} • {selectedResource.seller.year}</p>
+                    <p className="text-[10px] font-mono-code text-black/80 truncate">Location: {selectedResource.seller.college} ({selectedResource.campus})</p>
                   </div>
                 </div>
-
               </div>
 
-              {/* ACTION BUTTONS: REQUEST EXCHANGE & CHAT WITH SELLER */}
-              <div className="pt-3 flex flex-wrap items-center justify-between gap-4">
-                
+              {/* ACTION BUTTON GRID MATCHING REFERENCE */}
+              <div className="pt-2 grid grid-cols-12 gap-2">
+                {/* Save to Wishlist Heart Button */}
                 <button
                   onClick={() => toggleWishlist(selectedResource.id)}
-                  className="py-3.5 px-6 rounded-xl bg-black hover:bg-white text-white hover:text-black font-extrabold text-xs uppercase font-mono-code transition-all border-2 border-black flex items-center gap-2 cursor-pointer shadow-lg"
+                  className="col-span-2 border-2 border-black bg-white hover:bg-black text-black hover:text-white p-3.5 flex items-center justify-center transition-all cursor-pointer"
+                  title="Save to Wishlist"
                 >
-                  <Heart className={`w-4 h-4 ${wishlist.includes(selectedResource.id) ? 'fill-[#FF4F00] text-[#FF4F00]' : ''}`} />
-                  <span>{wishlist.includes(selectedResource.id) ? 'Saved in Wishlist' : 'Save to Wishlist'}</span>
+                  <Heart className={`w-5 h-5 ${wishlist.includes(selectedResource.id) ? 'fill-[#FF4F00] text-[#FF4F00]' : ''}`} />
                 </button>
 
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => handleOpenChat(selectedResource.seller, selectedResource.title)}
-                    className="py-4 px-7 rounded-xl bg-black hover:bg-white text-white hover:text-black font-extrabold text-xs uppercase font-mono-code border-2 border-black transition-all flex items-center gap-2 cursor-pointer shadow-lg"
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                    <span>Chat with Seller</span>
-                  </button>
+                {/* Chat with Seller Button */}
+                <button
+                  onClick={() => handleOpenChat(selectedResource.seller, selectedResource.title)}
+                  className="col-span-5 border-2 border-black bg-white hover:bg-black text-black hover:text-white font-mono-code font-black text-xs uppercase p-3.5 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>CHAT SELLER</span>
+                </button>
 
-                  <button
-                    onClick={() => setActiveExchangeProposal(selectedResource)}
-                    className="py-4 px-8 rounded-xl bg-white hover:bg-black text-black hover:text-white font-extrabold text-xs uppercase font-mono-code transition-all border-3 border-black cursor-pointer flex items-center gap-2 shadow-xl"
-                  >
-                    <span>Request Exchange</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-
+                {/* Request Exchange Button */}
+                <button
+                  onClick={() => setActiveExchangeProposal(selectedResource)}
+                  className="col-span-5 border-2 border-black bg-black hover:bg-white text-white hover:text-black font-mono-code font-black text-xs uppercase p-3.5 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>REQUEST TRADE →</span>
+                </button>
               </div>
 
             </div>
 
           </main>
 
-          {/* FOOTER BAR */}
-          <footer className="w-full pt-4 border-t-2 border-black flex items-center justify-between text-xs font-mono-code font-bold max-w-7xl mx-auto">
-            <span>REXCHANGE® FULL VIEW</span>
-            <span>VERIFIED CAMPUS MEMBERSHIP</span>
+          {/* EDITORIAL FOOTER */}
+          <footer className="w-full pt-4 border-t border-black flex items-center justify-between text-[11px] font-mono-code font-bold max-w-7xl mx-auto">
+            <span>REXCHANGE® • VERIFIED CAMPUS PASSPORT</span>
+            <span>MINIMALIST EDITORIAL EDITION</span>
           </footer>
 
         </div>
