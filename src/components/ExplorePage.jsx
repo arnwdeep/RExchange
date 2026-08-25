@@ -9,7 +9,7 @@ const INITIAL_CATALOG_RESOURCES = [
     id: 1,
     title: 'Engineering Mathematics Vol. II',
     category: 'Books',
-    image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=1000',
+    image: '/items/math_textbook.jpg',
     condition: 'Like New',
     value: '₹450',
     type: 'Sale / Exchange',
@@ -35,7 +35,7 @@ const INITIAL_CATALOG_RESOURCES = [
     id: 2,
     title: 'Sony WH-1000XM4 ANC Headphones',
     category: 'Electronics',
-    image: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=1000',
+    image: '/items/sony_headphones.jpg',
     condition: 'Good Condition',
     value: '₹1,200',
     type: 'Exchange Only',
@@ -61,7 +61,7 @@ const INITIAL_CATALOG_RESOURCES = [
     id: 3,
     title: 'Python Programming Handwritten Notes',
     category: 'Notes',
-    image: 'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&q=80&w=1000',
+    image: '/items/python_notes.jpg',
     condition: 'Excellent',
     value: 'FREE',
     type: 'Free Donation',
@@ -87,7 +87,7 @@ const INITIAL_CATALOG_RESOURCES = [
     id: 4,
     title: 'Casio FX-991EX ClassWiz Calculator',
     category: 'Electronics',
-    image: 'https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?auto=format&fit=crop&q=80&w=1000',
+    image: '/items/casio_calculator.jpg',
     condition: 'Like New',
     value: '₹650',
     type: 'Sale / Exchange',
@@ -113,7 +113,7 @@ const INITIAL_CATALOG_RESOURCES = [
     id: 5,
     title: 'Custom RGB Mechanical Keyboard',
     category: 'Electronics',
-    image: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&q=80&w=1000',
+    image: '/items/mechanical_keyboard.jpg',
     condition: 'Mint Condition',
     value: '₹1,800',
     type: 'Exchange',
@@ -139,7 +139,7 @@ const INITIAL_CATALOG_RESOURCES = [
     id: 6,
     title: 'Hackathon VIP Pass & Workshop Ticket',
     category: 'Tickets',
-    image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=1000',
+    image: '/items/hackathon_pass.jpg',
     condition: 'Verified Pass',
     value: '₹290',
     type: 'Transfer',
@@ -165,7 +165,7 @@ const INITIAL_CATALOG_RESOURCES = [
     id: 7,
     title: 'iPad Air M2 with Apple Pencil 2',
     category: 'Electronics',
-    image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=1000',
+    image: '/items/ipad_pencil.jpg',
     condition: 'Like New',
     value: '₹3,400',
     type: 'Exchange / Sale',
@@ -191,7 +191,7 @@ const INITIAL_CATALOG_RESOURCES = [
     id: 8,
     title: 'Precision Mechanical Drafting Kit',
     category: 'Tools',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=1000',
+    image: '/items/drafting_kit.jpg',
     condition: 'Like New',
     value: '₹850',
     type: 'Exchange / Sale',
@@ -778,12 +778,12 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                       opacity,
                       zIndex
                     }}
-                    className={`carousel-card-convex absolute w-56 sm:w-68 md:w-76 h-[380px] sm:h-[440px] md:h-[480px] rounded-none overflow-hidden cursor-pointer border-0 outline-none shadow-none active:scale-95 group transition-all duration-300 ${
+                    className={`carousel-card-convex absolute w-56 sm:w-68 md:w-76 h-[380px] sm:h-[440px] md:h-[480px] bg-white rounded-none overflow-hidden cursor-pointer border-0 outline-none shadow-none active:scale-95 group transition-all duration-300 ${
                       isCenter ? 'ring-2 ring-black' : ''
                     }`}
                     title={`Click to view details for ${item.title}`}
                   >
-                    {/* BORDERLESS SHARP CORNER PRODUCT IMAGE */}
+                    {/* PURE WHITE BACKGROUND STUDIO PRODUCT CUTOUT */}
                     <img
                       src={item.image}
                       alt={item.title}
@@ -791,16 +791,16 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                         e.stopPropagation();
                         handleSelectCard(item, index);
                       }}
-                      className="w-full h-full object-cover rounded-none filter contrast-[1.06] brightness-[0.94] group-hover:scale-110 group-hover:brightness-105 transition-transform duration-500 border-0 outline-none shadow-none cursor-pointer"
+                      className="w-full h-full object-contain p-4 sm:p-6 bg-white rounded-none group-hover:scale-105 transition-transform duration-500 border-0 outline-none shadow-none cursor-pointer"
                     />
 
-                    {/* Gradient Overlay */}
+                    {/* Subtle Gradient Overlay */}
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
                         handleSelectCard(item, index);
                       }}
-                      className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-auto rounded-none cursor-pointer"
+                      className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-auto rounded-none cursor-pointer"
                     />
                   </div>
                 );
@@ -870,11 +870,11 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
           <main className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-10 items-center my-6 flex-1">
             
             {/* Left Column: Product Image (Span 5) */}
-            <div className="md:col-span-5 relative rounded-3xl overflow-hidden border-3 border-black h-[320px] sm:h-[420px] md:h-[480px] shadow-2xl group">
+            <div className="md:col-span-5 relative rounded-3xl overflow-hidden border-3 border-black h-[320px] sm:h-[420px] md:h-[480px] shadow-2xl group bg-white">
               <img
                 src={selectedResource.image}
                 alt={selectedResource.title}
-                className="w-full h-full object-cover filter contrast-[1.05] brightness-[0.96] group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-contain p-6 bg-white group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute top-4 left-4 bg-black text-white text-xs font-extrabold uppercase px-4 py-1.5 rounded-full font-mono-code border border-white/20 shadow-md">
                 {selectedResource.type}
