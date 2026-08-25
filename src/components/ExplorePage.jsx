@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Search, Heart, User, Sparkles, ArrowRight, Star, CheckCircle, Flame, ChevronRight, X, RefreshCw, MessageSquare, ShieldCheck, MapPin, Clock, Tag, ChevronDown, Send, Check, Plus, Upload, Image as ImageIcon } from 'lucide-react';
 import IDCard3D from './IDCard3D';
 import HangingLanyard from './HangingLanyard';
@@ -273,42 +273,61 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
   const catalogRef = useRef(null);
 
-  const showToast = (msg) => {
+  const showToast = useCallback((msg) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
     }, 3400);
-  };
+  }, []);
 
-  // Filter resources
-  const filteredResources = catalogItems.filter(item => {
-    if (showWishlistOnly) return wishlist.includes(item.id);
-    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory || (selectedCategory === 'Exchanges' && item.type.includes('Exchange'));
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          item.seller.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // Keyboard shortcut listener for Accessibility: Escape key dismisses open modals
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (selectedResource) setSelectedResource(null);
+        else if (activeChatSeller) setActiveChatSeller(null);
+        else if (activeExchangeProposal) setActiveExchangeProposal(null);
+        else if (isSellModalOpen) setIsSellModalOpen(false);
+        else if (showExchangesPage) setShowExchangesPage(false);
+        else if (isSearchOpen) setIsSearchOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedResource, activeChatSeller, activeExchangeProposal, isSellModalOpen, showExchangesPage, isSearchOpen]);
 
-  const toggleWishlist = (id) => {
-    const isSaved = wishlist.includes(id);
-    setWishlist(prev =>
-      isSaved ? prev.filter(item => item !== id) : [...prev, id]
-    );
-    showToast(isSaved ? 'Removed from your Wishlist' : 'Saved to your Wishlist!');
-  };
+  // Memoized resource filtering for high performance
+  const filteredResources = useMemo(() => {
+    return catalogItems.filter(item => {
+      if (showWishlistOnly) return wishlist.includes(item.id);
+      const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory || (selectedCategory === 'Exchanges' && item.type.includes('Exchange'));
+      const query = searchQuery.toLowerCase().trim();
+      const matchesSearch = !query || item.title.toLowerCase().includes(query) ||
+                            item.description.toLowerCase().includes(query) ||
+                            item.seller.name.toLowerCase().includes(query);
+      return matchesCategory && matchesSearch;
+    });
+  }, [catalogItems, showWishlistOnly, wishlist, selectedCategory, searchQuery]);
 
-  const handleOpenChat = (seller, itemTitle) => {
+  const toggleWishlist = useCallback((id) => {
+    setWishlist(prev => {
+      const isSaved = prev.includes(id);
+      showToast(isSaved ? 'Removed from your Wishlist' : 'Saved to your Wishlist!');
+      return isSaved ? prev.filter(item => item !== id) : [...prev, id];
+    });
+  }, [showToast]);
+
+  const handleOpenChat = useCallback((seller, itemTitle) => {
     setActiveChatSeller(seller);
     setChatMessages([
       { sender: 'seller', text: `Hi! Thanks for reaching out about ${itemTitle}. Let me know if you have questions or want to arrange a campus meetup!` }
     ]);
-  };
+  }, []);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = useCallback((e) => {
     e.preventDefault();
     if (!newChatMessage.trim()) return;
-    const userMsg = newChatMessage;
+    const userMsg = newChatMessage.trim();
     setChatMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
     setNewChatMessage('');
 
@@ -318,17 +337,28 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
         { sender: 'seller', text: `Sounds great! I'm around ${activeChatSeller?.college || 'campus'} today. What time works best for you?` }
       ]);
     }, 1200);
-  };
+  }, [newChatMessage, activeChatSeller]);
 
-  const handleSendExchangeProposal = () => {
-    showToast(`Exchange Proposal sent to ${activeExchangeProposal.seller.name}!`);
-    setActiveExchangeProposal(null);
-    setSelectedResource(null);
-  };
+  const handleSendExchangeProposal = useCallback(() => {
+    if (activeExchangeProposal) {
+      showToast(`Exchange Proposal sent to ${activeExchangeProposal.seller.name}!`);
+      setActiveExchangeProposal(null);
+      setSelectedResource(null);
+    }
+  }, [activeExchangeProposal, showToast]);
 
+  // Secure file upload validation (Max 5MB, JPG/PNG/WEBP only)
   const handleSellPhotoUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!['image/png', 'image/jpeg', 'image/jpg', 'image/webp'].includes(file.type)) {
+        showToast('Invalid file format. Please upload PNG, JPG, or WEBP images.');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('File size exceeds 5MB limit.');
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setSellForm(prev => ({ ...prev, image: reader.result }));
@@ -773,16 +803,25 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                 return (
                   <div
                     key={item.id}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View details for ${item.title}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleSelectCard(item, index);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelectCard(item, index);
+                      }
                     }}
                     style={{
                       transform: `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotate(${rotateZ}deg) scale(${scale})`,
                       opacity,
                       zIndex
                     }}
-                    className={`carousel-card-convex absolute w-56 sm:w-68 md:w-76 h-[380px] sm:h-[440px] md:h-[480px] bg-white rounded-none overflow-hidden cursor-pointer border-0 outline-none shadow-none active:scale-95 group transition-all duration-300 ${
+                    className={`carousel-card-convex absolute w-56 sm:w-68 md:w-76 h-[380px] sm:h-[440px] md:h-[480px] bg-white rounded-none overflow-hidden cursor-pointer border-0 outline-none shadow-none active:scale-95 focus:ring-2 focus:ring-black group transition-all duration-300 ${
                       isCenter ? 'ring-2 ring-black' : ''
                     }`}
                     title={`Click to view details for ${item.title}`}
@@ -843,7 +882,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
       {/* DEDICATED MY CAMPUS EXCHANGES & ACTIVITY PAGE */}
       {showExchangesPage && (
-        <div className="fixed inset-0 z-50 bg-[#FF4F00] text-black w-screen h-screen min-h-screen overflow-y-auto p-4 sm:p-8 md:p-10 animate-enter-cinematic flex flex-col justify-between select-none">
+        <div role="dialog" aria-modal="true" aria-label="My Campus Exchanges & Activity Dashboard" className="fixed inset-0 z-50 bg-[#FF4F00] text-black w-screen h-screen min-h-screen overflow-y-auto p-4 sm:p-8 md:p-10 animate-enter-cinematic flex flex-col justify-between select-none">
           
           {/* HEADER BAR */}
           <header className="w-full flex items-center justify-between pb-4 border-b border-black max-w-7xl mx-auto">
@@ -1052,7 +1091,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
       {/* FULL SCREEN RESOURCE & SELLER DETAILS OVERLAY (EDITORIAL MINIMAL LAYOUT MATCHING REFERENCE) */}
       {selectedResource && (
-        <div className="fixed inset-0 z-50 bg-[#FF4F00] text-black w-screen h-screen min-h-screen overflow-y-auto p-4 sm:p-8 md:p-10 animate-enter-cinematic flex flex-col justify-between select-none">
+        <div role="dialog" aria-modal="true" aria-label="Item details modal" className="fixed inset-0 z-50 bg-[#FF4F00] text-black w-screen h-screen min-h-screen overflow-y-auto p-4 sm:p-8 md:p-10 animate-enter-cinematic flex flex-col justify-between select-none">
           
           {/* TOP BREADCRUMBS & CLOSE HEADER */}
           <header className="w-full flex items-center justify-between pb-4 border-b border-black max-w-7xl mx-auto">
@@ -1206,7 +1245,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
       {/* INTERACTIVE SELL ITEM MODAL (MATCHING VIBRANT ORANGE THEME) */}
       {isSellModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div role="dialog" aria-modal="true" aria-label="Sell item modal" className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-[#FF4F00] border-3 border-black text-black max-w-2xl w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative space-y-5 animate-enter-cinematic my-8 max-h-[90vh] overflow-y-auto">
             
             {/* Modal Close Button */}
@@ -1403,7 +1442,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
       {/* INTERACTIVE LIVE CHAT WITH SELLER MODAL */}
       {activeChatSeller && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div role="dialog" aria-modal="true" aria-label="Live chat modal" className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-[#FF4F00] border-2 border-black text-black max-w-lg w-full rounded-3xl p-6 shadow-2xl space-y-4 animate-enter-cinematic flex flex-col h-[520px]">
             
             {/* Header */}
@@ -1423,18 +1462,18 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
               </button>
             </div>
 
-            {/* Messages Body */}
-            <div className="flex-1 overflow-y-auto space-y-3 p-2 bg-white/20 rounded-2xl border border-black/20">
-              {chatMessages.map((msg, i) => (
+            {/* Chat Messages Body */}
+            <div className="flex-1 overflow-y-auto space-y-3 p-2 bg-white/30 rounded-2xl border border-black/30">
+              {chatMessages.map((msg, index) => (
                 <div
-                  key={i}
+                  key={index}
                   className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] p-3 rounded-2xl text-xs font-medium font-sans shadow-md ${
+                    className={`max-w-[80%] p-3 rounded-2xl text-xs font-mono-code ${
                       msg.sender === 'user'
                         ? 'bg-black text-white rounded-br-none border border-black'
-                        : 'bg-white text-black rounded-bl-none border border-black font-semibold'
+                        : 'bg-white text-black font-bold rounded-bl-none border border-black'
                     }`}
                   >
                     {msg.text}
@@ -1443,14 +1482,14 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
               ))}
             </div>
 
-            {/* Message Input Box */}
-            <form onSubmit={handleSendMessage} className="flex items-center gap-2 pt-1">
+            {/* Input Form */}
+            <form onSubmit={handleSendMessage} className="flex items-center gap-2 pt-2">
               <input
                 type="text"
-                placeholder="Type your message..."
+                placeholder="Type a campus message..."
                 value={newChatMessage}
                 onChange={(e) => setNewChatMessage(e.target.value)}
-                className="flex-1 bg-white text-black text-xs font-semibold px-4 py-3 rounded-xl border-2 border-black focus:outline-none placeholder-zinc-500"
+                className="flex-1 bg-white text-black text-xs font-bold px-4 py-3 rounded-xl border-2 border-black focus:outline-none placeholder-zinc-400 font-mono-code"
               />
               <button
                 type="submit"
@@ -1466,7 +1505,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
       {/* INTERACTIVE REQUEST EXCHANGE PROPOSAL MODAL */}
       {activeExchangeProposal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div role="dialog" aria-modal="true" aria-label="Exchange proposal modal" className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-[#FF4F00] border-2 border-black text-black max-w-md w-full rounded-3xl p-6 shadow-2xl space-y-5 animate-enter-cinematic">
             
             <div className="flex items-center justify-between border-b-2 border-black pb-3">
