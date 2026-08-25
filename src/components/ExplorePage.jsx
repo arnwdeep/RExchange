@@ -413,7 +413,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
   // Continuous Smooth Carousel Offset - Dynamic Center Item Fitting (No fixed middle item!)
   const [carouselOffset, setCarouselOffset] = useState(3.0);
 
-  // Smoothly move items on moving the mouse horizontally across the catalog container
+  // Smoothly move items on moving the mouse horizontally across the catalog container (Super slow & smooth!)
   const handleCatalogMouseMove = (e) => {
     if (!catalogRef.current || isDraggingCard) return;
     const rect = catalogRef.current.getBoundingClientRect();
@@ -423,12 +423,12 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
     const total = filteredResources.length;
     if (total <= 1) return;
 
-    // Continuous offset shift: normX (-1 to +1) smoothly glides items
-    const offsetShift = normX * (total / 2.5);
+    // Super slow continuous offset shift: normX (-1 to +1) gently glides catalog by 0.85 cards max
+    const offsetShift = normX * 0.85;
     const targetOffset = activeIndex + offsetShift;
     setCarouselOffset(targetOffset);
 
-    // Update activeIndex to whichever item fits in the middle spot
+    // Update activeIndex smoothly to whichever item fits in the center
     const newActiveIndex = ((Math.round(targetOffset) % total) + total) % total;
     if (newActiveIndex !== activeIndex) {
       setActiveIndex(newActiveIndex);
@@ -445,7 +445,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
     const total = filteredResources.length;
     if (total <= 1) return;
 
-    const offsetShift = normX * (total / 2.5);
+    const offsetShift = normX * 0.85;
     const targetOffset = activeIndex + offsetShift;
     setCarouselOffset(targetOffset);
 
