@@ -149,7 +149,7 @@ export default function IDCard3D({
                 </div>
               </div>
 
-              {/* HIGH QUALITY DEFAULT STUDENT DP PHOTO AREA WITH UPLOAD OPTION */}
+              {/* HIGH QUALITY DEFAULT STUDENT DP PHOTO AREA WITH VISIBLE UPLOAD OPTION */}
               <div className="flex flex-col items-center my-2 relative">
                 <div
                   onClick={(e) => {
@@ -169,23 +169,28 @@ export default function IDCard3D({
                     />
                   ) : (
                     /* High Quality Crisp Vector Neutral Avatar SVG */
-                    <svg className="w-full h-full" viewBox="0 0 100 115" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="100" height="115" fill="#E5E7EB" />
-                      <circle cx="50" cy="42" r="22" fill="#9CA3AF" />
-                      <path d="M14 106C14 79 29 68 50 68C71 68 86 79 86 106V115H14V106Z" fill="#9CA3AF" />
-                    </svg>
+                    <div className="relative w-full h-full flex flex-col items-center justify-center">
+                      <svg className="w-full h-full" viewBox="0 0 100 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="115" fill="#E5E7EB" />
+                        <circle cx="50" cy="40" r="22" fill="#9CA3AF" />
+                        <path d="M14 104C14 77 29 66 50 66C71 66 86 77 86 104V115H14V104Z" fill="#9CA3AF" />
+                      </svg>
+                    </div>
                   )}
 
-                  {/* Photo hover overlay button */}
+                  {/* VISIBLE ALWAYS-ON CAMERA UPLOAD BADGE AT BOTTOM OF PHOTO */}
                   {!readOnly && (
-                    <div className="absolute inset-0 bg-[#FF6B00]/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="bg-[#1A1918] text-white px-2 py-1 rounded shadow flex items-center gap-1">
-                        <Camera className="w-3 h-3 text-[#FF6B00]" />
-                        <span className="text-[8.5px] font-extrabold uppercase">
-                          {studentData.photoUrl ? 'CHANGE DP' : 'UPLOAD DP'}
-                        </span>
-                      </div>
+                    <div className="absolute bottom-1 right-1 bg-black/80 text-white px-2 py-1 rounded border border-white/20 shadow-md flex items-center gap-1 backdrop-blur group-hover:bg-[#FF6B00] group-hover:text-black transition-colors z-20">
+                      <Camera className="w-3 h-3 text-[#FF6B00] group-hover:text-black" />
+                      <span className="text-[8px] font-mono-code font-black uppercase tracking-wider">
+                        {studentData.photoUrl ? 'CHANGE' : '+ UPLOAD'}
+                      </span>
                     </div>
+                  )}
+
+                  {/* Photo Hover Overlay */}
+                  {!readOnly && (
+                    <div className="absolute inset-0 bg-[#FF6B00]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10" />
                   )}
                 </div>
 
