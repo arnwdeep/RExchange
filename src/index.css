@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #FF4F00;
+    color: #F3F4F6;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Custom Typography Helpers */
+.font-handwriting {
+  font-family: 'Caveat', cursive;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-helvetica {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.font-helvetica-thin {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 200;
+}
+
+/* Plastic ID Card Holder & Vinyl Sleeve Styles - Clean Transparent without Heavy BG */
+.plastic-holder {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  border: none;
+}
+
+.vinyl-glare {
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.0) 35%,
+    rgba(255, 255, 255, 0.20) 48%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.10) 52%,
+    transparent 65%
+  );
+  pointer-events: none;
+  transition: transform 0.1s ease-out, opacity 0.3s ease;
+}
+
+.zipper-line {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.2) 0px,
+    rgba(255, 255, 255, 0.2) 3px,
+    rgba(0, 0, 0, 0.2) 3px,
+    rgba(0, 0, 0, 0.2) 6px
+  );
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.card-paper-texture {
+  background-color: #F7F4EB;
+  background-image: 
+    radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 0),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0%, rgba(247, 244, 235, 0.9) 100%);
+  background-size: 8px 8px, 100% 100%;
+}
+
+.perspective-container {
+  perspective: 1200px;
+  perspective-origin: 50% 20%;
+}
+
+.card-3d-wrapper {
+  transform-style: preserve-3d;
+  transition: transform 0.12s cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+
+/* Convex Rainbow Arc Fanning Carousel */
+.perspective-carousel-convex {
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.carousel-card-convex {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Glass Card Overlay */
+.glass-card-orange {
+  background: rgba(18, 15, 24, 0.85);
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FF4F00;
+}
+::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 3px;
+}
+
+/* Keyframe Animations */
+@keyframes floatSway {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.2deg);
+  }
+}
+
+@keyframes enterCinematic {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Login Page to Home Page Animation: BIG IN MIDDLE TO SMALL ON TOP RIGHT */
+@keyframes cardShiftTopRightScreen {
+  0% {
+    opacity: 0.3;
+    transform: translate3d(-34vw, 24vh, 0px) scale(2.2) rotate(-5deg);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0px, 0px, 0px) scale(1) rotate(0deg);
+  }
+}
+
+.animate-float-sway {
+  animation: floatSway 6s ease-in-out infinite;
+}
+
+.animate-enter-cinematic {
+  animation: enterCinematic 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-card-shift-top-right-screen {
+  animation: cardShiftTopRightScreen 1.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
