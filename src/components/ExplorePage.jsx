@@ -235,11 +235,6 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
   const [cardTilt, setCardTilt] = useState({ x: 0, y: 0 });
   const [activeIndex, setActiveIndex] = useState(3);
 
-  // Continuous Smooth Carousel Offset State (No Fast Shuffling!)
-  const [carouselOffset, setCarouselOffset] = useState(3.0);
-  const isDraggingCatalogRef = useRef(false);
-  const dragCatalogStartRef = useRef({ x: 0, startOffset: 3.0 });
-
   // Sell Item Modal State
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
   const [sellForm, setSellForm] = useState({
@@ -415,56 +410,43 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
     setCardTilt({ x: 0, y: 0 });
   };
 
-  // Smoothly move items on dragging / scrolling across the catalog container
+  // Continuous Smooth Carousel Offset (No up/down scroll wheel hijacking!)
+  const [carouselOffset, setCarouselOffset] = useState(3.0);
+  const baseIndexRef = useRef(3);
+
+  // Smoothly move items ONLY on moving the mouse horizontally across the catalog container
   const handleCatalogMouseMove = (e) => {
     if (!catalogRef.current || isDraggingCard) return;
+    const rect = catalogRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const normX = (e.clientX - centerX) / (rect.width / 2);
     
-    if (isDraggingCatalogRef.current) {
-      const deltaX = e.clientX - dragCatalogStartRef.current.x;
-      const targetOffset = dragCatalogStartRef.current.startOffset - (deltaX / 180);
-      setCarouselOffset(targetOffset);
-    }
-  };
-
-  const handleCatalogMouseDown = (e) => {
-    if (isDraggingCard) return;
-    isDraggingCatalogRef.current = true;
-    dragCatalogStartRef.current = { x: e.clientX, startOffset: carouselOffset };
-  };
-
-  const handleCatalogMouseUp = () => {
-    if (!isDraggingCatalogRef.current) return;
-    isDraggingCatalogRef.current = false;
     const total = filteredResources.length;
-    if (total > 0) {
-      const nearestIndex = ((Math.round(carouselOffset) % total) + total) % total;
-      setCarouselOffset(nearestIndex);
-      setActiveIndex(nearestIndex);
-    }
+    if (total <= 1) return;
+
+    // Smooth linear shift relative to base index: normX (-1 to +1) smoothly moves catalog
+    const offsetShift = normX * (total / 2.6);
+    const targetOffset = baseIndexRef.current + offsetShift;
+    setCarouselOffset(targetOffset);
   };
 
   const handleTouchMove = (e) => {
     if (!catalogRef.current || !e.touches[0] || isDraggingCard) return;
-    if (isDraggingCatalogRef.current) {
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - dragCatalogStartRef.current.x;
-      const targetOffset = dragCatalogStartRef.current.startOffset - (deltaX / 180);
-      setCarouselOffset(targetOffset);
-    }
-  };
-
-  const handleCatalogWheel = (e) => {
-    if (!catalogRef.current || isDraggingCard) return;
+    const touch = e.touches[0];
+    const rect = catalogRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const normX = (touch.clientX - centerX) / (rect.width / 2);
+    
     const total = filteredResources.length;
     if (total <= 1) return;
-    const delta = e.deltaY > 0 ? 0.4 : -0.4;
-    const targetOffset = carouselOffset + delta;
+
+    const offsetShift = normX * (total / 2.6);
+    const targetOffset = baseIndexRef.current + offsetShift;
     setCarouselOffset(targetOffset);
-    const nearestIndex = ((Math.round(targetOffset) % total) + total) % total;
-    setActiveIndex(nearestIndex);
   };
 
   const handleSelectCard = (item, index) => {
+    baseIndexRef.current = index;
     setCarouselOffset(index);
     setActiveIndex(index);
     setSelectedResource(item);
@@ -692,12 +674,9 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
           {/* OVERFLOW VISIBLE PERSPECTIVE CONTAINER */}
           <div
             ref={catalogRef}
-            onMouseDown={handleCatalogMouseDown}
             onMouseMove={handleCatalogMouseMove}
-            onMouseUp={handleCatalogMouseUp}
             onTouchMove={handleTouchMove}
-            onWheel={handleCatalogWheel}
-            className="perspective-carousel-convex relative w-full h-[540px] sm:h-[600px] md:h-[660px] flex items-center justify-center overflow-visible my-4 cursor-grab active:cursor-grabbing select-none"
+            className="perspective-carousel-convex relative w-full h-[540px] sm:h-[600px] md:h-[660px] flex items-center justify-center overflow-visible my-4 cursor-ew-resize select-none"
           >
             
             {/* CONVEX RAINBOW FANNING ARC - UNCLIPPED CARDS */}
