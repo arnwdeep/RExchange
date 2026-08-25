@@ -714,12 +714,12 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                       opacity,
                       zIndex
                     }}
-                    className={`carousel-card-convex absolute w-56 sm:w-68 md:w-76 h-[380px] sm:h-[440px] md:h-[480px] rounded-[32px] overflow-hidden cursor-pointer border-0 outline-none shadow-none active:scale-95 group transition-all duration-300 ${
+                    className={`carousel-card-convex absolute w-56 sm:w-68 md:w-76 h-[380px] sm:h-[440px] md:h-[480px] rounded-none overflow-hidden cursor-pointer border-0 outline-none shadow-none active:scale-95 group transition-all duration-300 ${
                       isCenter ? 'ring-2 ring-black' : ''
                     }`}
                     title={`Click to view details for ${item.title}`}
                   >
-                    {/* BORDERLESS PURE PINTEREST AESTHETIC PRODUCT IMAGE */}
+                    {/* BORDERLESS SHARP CORNER PRODUCT IMAGE */}
                     <img
                       src={item.image}
                       alt={item.title}
@@ -727,7 +727,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                         e.stopPropagation();
                         handleSelectCard(item, index);
                       }}
-                      className="w-full h-full object-cover rounded-[32px] filter contrast-[1.06] brightness-[0.94] group-hover:scale-110 group-hover:brightness-105 transition-transform duration-500 border-0 outline-none shadow-none cursor-pointer"
+                      className="w-full h-full object-cover rounded-none filter contrast-[1.06] brightness-[0.94] group-hover:scale-110 group-hover:brightness-105 transition-transform duration-500 border-0 outline-none shadow-none cursor-pointer"
                     />
 
                     {/* Gradient Overlay */}
@@ -736,7 +736,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                         e.stopPropagation();
                         handleSelectCard(item, index);
                       }}
-                      className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-auto rounded-[32px] cursor-pointer"
+                      className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-auto rounded-none cursor-pointer"
                     />
                   </div>
                 );
