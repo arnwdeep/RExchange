@@ -633,6 +633,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
 
             {/* + SELL ITEM PROMINENT BUTTON */}
             <button
+              aria-label="+ SELL ITEM"
               onClick={() => setIsSellModalOpen(true)}
               className="px-4 py-1.5 rounded-full bg-black text-white hover:bg-white hover:text-black transition-all cursor-pointer shadow-lg text-xs font-mono-code font-extrabold uppercase tracking-wider flex items-center gap-1.5 border border-black"
             >
@@ -1250,6 +1251,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
             
             {/* Modal Close Button */}
             <button
+              aria-label="Close listing form"
               onClick={() => setIsSellModalOpen(false)}
               className="absolute top-5 right-5 p-2.5 rounded-full bg-black text-white hover:bg-white hover:text-black transition-all cursor-pointer z-20 shadow-md border border-black"
             >
