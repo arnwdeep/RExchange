@@ -463,3 +463,6 @@ export default function IDCard3D({
     </div>
   );
 }
+
+export const IDCard3DMemoized = React.memo(IDCard3D);
+
