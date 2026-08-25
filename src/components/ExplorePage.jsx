@@ -629,24 +629,80 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
             </button>
           </div>
 
-          {/* EXPANDABLE POPUP SEARCH INPUT OVERLAY */}
+          {/* EXPANDABLE POPUP SEARCH INPUT OVERLAY WITH REAL-TIME MATCH DROPDOWN */}
           {isSearchOpen && (
-            <div className="absolute top-16 left-1/2 -translate-x-1/2 z-30 bg-black/90 border border-white/40 p-2.5 rounded-full shadow-2xl flex items-center gap-2 animate-enter-cinematic">
-              <Search className="w-4 h-4 text-[#FF4F00] ml-2" />
-              <input
-                type="text"
-                placeholder="Search items, sellers..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-                className="bg-transparent text-xs text-white placeholder-zinc-400 focus:outline-none w-56 sm:w-72 font-mono-code"
-              />
-              <button
-                onClick={() => setIsSearchOpen(false)}
-                className="p-1 rounded-full text-zinc-400 hover:text-white"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
+            <div className="absolute top-16 left-1/2 -translate-x-1/2 z-40 bg-black/95 border-2 border-white/40 p-3 rounded-2xl shadow-2xl flex flex-col gap-2 animate-enter-cinematic w-80 sm:w-96">
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-[#FF4F00] ml-2" />
+                <input
+                  type="text"
+                  placeholder="Search items, sellers, categories..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    baseIndexRef.current = 0;
+                    setCarouselOffset(0);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  autoFocus
+                  className="bg-transparent text-xs text-white placeholder-zinc-400 focus:outline-none flex-1 font-mono-code"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      baseIndexRef.current = 0;
+                      setCarouselOffset(0);
+                    }}
+                    className="p-1 rounded-full text-zinc-400 hover:text-white"
+                    title="Clear search"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsSearchOpen(false)}
+                  className="p-1.5 rounded-full bg-zinc-800 text-zinc-300 hover:text-white hover:bg-black border border-zinc-700 transition-colors"
+                  title="Close search"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* REAL-TIME SEARCH RESULTS POPUP LIST BELOW INPUT */}
+              {searchQuery.trim() && (
+                <div className="border-t border-zinc-800 pt-2 space-y-1.5 max-h-60 overflow-y-auto">
+                  {filteredResources.length > 0 ? (
+                    filteredResources.map((item, idx) => (
+                      <div
+                        key={item.id}
+                        onClick={() => {
+                          setSelectedResource(item);
+                          baseIndexRef.current = idx;
+                          setCarouselOffset(idx);
+                          setActiveIndex(idx);
+                        }}
+                        className="flex items-center gap-3 p-2 rounded-xl bg-zinc-900/90 hover:bg-[#FF4F00] text-white hover:text-black transition-all cursor-pointer group border border-zinc-800"
+                      >
+                        <img src={item.image} alt={item.title} className="w-10 h-10 rounded-lg object-cover border border-white/20 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-xs font-bold font-helvetica uppercase truncate">{item.title}</h4>
+                          <p className="text-[10px] font-mono-code opacity-80 truncate">{item.category} • {item.value}</p>
+                        </div>
+                        <ChevronRight className="w-4 h-4 opacity-70 group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-4 text-xs font-mono-code text-zinc-400">
+                      No matching campus items found for "{searchQuery}"
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
