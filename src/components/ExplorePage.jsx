@@ -410,11 +410,10 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
     setCardTilt({ x: 0, y: 0 });
   };
 
-  // Continuous Smooth Carousel Offset (No up/down scroll wheel hijacking!)
+  // Continuous Smooth Carousel Offset - Dynamic Center Item Fitting (No fixed middle item!)
   const [carouselOffset, setCarouselOffset] = useState(3.0);
-  const baseIndexRef = useRef(3);
 
-  // Smoothly move items ONLY on moving the mouse horizontally across the catalog container
+  // Smoothly move items on moving the mouse horizontally across the catalog container
   const handleCatalogMouseMove = (e) => {
     if (!catalogRef.current || isDraggingCard) return;
     const rect = catalogRef.current.getBoundingClientRect();
@@ -424,10 +423,16 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
     const total = filteredResources.length;
     if (total <= 1) return;
 
-    // Smooth linear shift relative to base index: normX (-1 to +1) smoothly moves catalog
-    const offsetShift = normX * (total / 2.6);
-    const targetOffset = baseIndexRef.current + offsetShift;
+    // Continuous offset shift: normX (-1 to +1) smoothly glides items
+    const offsetShift = normX * (total / 2.5);
+    const targetOffset = activeIndex + offsetShift;
     setCarouselOffset(targetOffset);
+
+    // Update activeIndex to whichever item fits in the middle spot
+    const newActiveIndex = ((Math.round(targetOffset) % total) + total) % total;
+    if (newActiveIndex !== activeIndex) {
+      setActiveIndex(newActiveIndex);
+    }
   };
 
   const handleTouchMove = (e) => {
@@ -440,13 +445,17 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
     const total = filteredResources.length;
     if (total <= 1) return;
 
-    const offsetShift = normX * (total / 2.6);
-    const targetOffset = baseIndexRef.current + offsetShift;
+    const offsetShift = normX * (total / 2.5);
+    const targetOffset = activeIndex + offsetShift;
     setCarouselOffset(targetOffset);
+
+    const newActiveIndex = ((Math.round(targetOffset) % total) + total) % total;
+    if (newActiveIndex !== activeIndex) {
+      setActiveIndex(newActiveIndex);
+    }
   };
 
   const handleSelectCard = (item, index) => {
-    baseIndexRef.current = index;
     setCarouselOffset(index);
     setActiveIndex(index);
     setSelectedResource(item);
@@ -640,7 +649,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    baseIndexRef.current = 0;
+                    setActiveIndex(0);
                     setCarouselOffset(0);
                   }}
                   onKeyDown={(e) => {
@@ -655,7 +664,7 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                   <button
                     onClick={() => {
                       setSearchQuery('');
-                      baseIndexRef.current = 0;
+                      setActiveIndex(0);
                       setCarouselOffset(0);
                     }}
                     className="p-1 rounded-full text-zinc-400 hover:text-white"
@@ -682,9 +691,8 @@ export default function ExplorePage({ studentData, onOpenStudentPass }) {
                         key={item.id}
                         onClick={() => {
                           setSelectedResource(item);
-                          baseIndexRef.current = idx;
-                          setCarouselOffset(idx);
                           setActiveIndex(idx);
+                          setCarouselOffset(idx);
                         }}
                         className="flex items-center gap-3 p-2 rounded-xl bg-zinc-900/90 hover:bg-[#FF4F00] text-white hover:text-black transition-all cursor-pointer group border border-zinc-800"
                       >
