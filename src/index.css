@@ -136,11 +136,11 @@
   }
 }
 
-/* Login Page to Home Page Animation: BIG IN MIDDLE TO SMALL ON TOP RIGHT */
-@keyframes cardShiftTopRightScreen {
+/* Login Page to Home Page Animation: BIG IN MIDDLE TO SMALL ON TOP LEFT */
+@keyframes cardShiftTopLeftScreen {
   0% {
     opacity: 0.3;
-    transform: translate3d(-34vw, 24vh, 0px) scale(2.2) rotate(-5deg);
+    transform: translate3d(24vw, 24vh, 0px) scale(2.2) rotate(5deg);
   }
   20% {
     opacity: 1;
@@ -159,6 +159,6 @@
   animation: enterCinematic 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-card-shift-top-right-screen {
-  animation: cardShiftTopRightScreen 1.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-card-shift-top-left-screen {
+  animation: cardShiftTopLeftScreen 1.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
